@@ -703,16 +703,18 @@
         const type  = (document.getElementById("type").value || "").trim();
         const msg   = (document.getElementById("msg").value || "").trim();
 
-        const lines = [
-          `السلام عليكم،`,
-          `لدي رسالة عبر موقع ${CONFIG.placeName}.`,
-          ``,
-          `النوع: ${type || "—"}`,
-          `الاسم: ${name || "—"}`,
-          `الجوال: ${phone || "—"}`,
-          `الرسالة:`,
-          `${msg || "—"}`
-        ];
+       const lines = [
+  `السلام عليكم ورحمة الله وبركاته،`,
+  `لدي رسالة جديدة عبر الموقع الرسمي لـ ${CONFIG.placeName}.`,
+  ``,
+  `نوع الطلب: ${type || "غير محدد"}`,
+  `اسم العميل: ${name || "غير مذكور"}`,
+  `رقم الجوال: ${phone || "غير مذكور"}`,
+  ``,
+  `نص الرسالة:`,
+  `${msg || "لا توجد رسالة"}`
+];
+
 
         const text = encodeURIComponent(lines.join("\n"));
         const waUrl = `https://wa.me/${CONFIG.whatsappIntl}?text=${text}`;
