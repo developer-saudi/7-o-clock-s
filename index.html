@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>7 o clock’s | مطعم للإفطار — جازان</title>
   <meta name="description" content="7 o clock’s — مطعم إفطار في العسيلة، جازان. تقييم 4.2 (21 مراجعة). أطباق مميزة: فلافل، شكشوكة، باستا بالخضار." />
-  <meta name="theme-color" content="#111827" />
+  <meta name="theme-color" content="#0b1220" />
 
   <style>
     :root{
@@ -16,7 +16,6 @@
       --line:rgba(255,255,255,.10);
       --brand:#f59e0b;   /* amber */
       --brand2:#22c55e;  /* green */
-      --danger:#ef4444;
       --shadow: 0 18px 60px rgba(0,0,0,.40);
       --radius: 18px;
       --max: 1150px;
@@ -76,7 +75,6 @@
       color:#071014; border-color:transparent;
     }
     .btn.ghost{background: rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.12)}
-    .btn.danger{background: rgba(239,68,68,.10); border-color: rgba(239,68,68,.30)}
     .card{
       background: rgba(17,26,46,.76);
       border:1px solid var(--line);
@@ -159,7 +157,48 @@
       font-size:13px;
       margin-bottom:10px;
     }
-    .review b{display:block; margin-bottom:8px}
+
+    /* Gallery */
+    .gallery-grid{display:grid; grid-template-columns: repeat(12, 1fr); gap:12px}
+    .shot{
+      border-radius: 18px;
+      border:1px solid rgba(255,255,255,.10);
+      background:
+        radial-gradient(600px 220px at 30% 20%, rgba(245,158,11,.25), transparent 60%),
+        radial-gradient(500px 200px at 80% 30%, rgba(34,197,94,.18), transparent 60%),
+        rgba(255,255,255,.03);
+      min-height: 150px;
+      position:relative;
+      overflow:hidden;
+    }
+    .shot::after{
+      content:"";
+      position:absolute; inset:0;
+      background: linear-gradient(180deg, transparent, rgba(0,0,0,.25));
+      pointer-events:none;
+    }
+    .shot .cap{
+      position:absolute; bottom:10px; right:12px; left:12px;
+      display:flex; justify-content:space-between; gap:10px; align-items:flex-end;
+      color: rgba(238,242,255,.95);
+      font-weight:900;
+    }
+    .shot small{font-weight:600; color: rgba(183,192,221,.98)}
+    .shot.w6{grid-column: span 6}
+    .shot.w4{grid-column: span 4}
+    .shot.w8{grid-column: span 8}
+
+    /* QR */
+    .qr{
+      display:flex; gap:12px; align-items:center; flex-wrap:wrap;
+      margin-top:10px;
+    }
+    .qr img{
+      width:140px; height:140px;
+      border-radius: 16px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+    }
 
     /* Contact */
     .contact-grid{display:grid; grid-template-columns: 1fr 1fr; gap:12px}
@@ -181,36 +220,41 @@
       color: rgba(183,192,221,.92);
     }
 
+    /* Floating quick actions */
+    .float{
+      position: fixed;
+      left: 16px;
+      bottom: 16px;
+      display:flex;
+      gap:10px;
+      z-index: 60;
+    }
+    .fab{
+      width:52px; height:52px;
+      border-radius: 18px;
+      display:grid; place-items:center;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+      box-shadow: 0 14px 40px rgba(0,0,0,.35);
+      text-decoration:none;
+      font-weight:900;
+    }
+    .fab.primary{
+      background: linear-gradient(135deg, rgba(245,158,11,1), rgba(34,197,94,1));
+      color:#071014;
+      border-color: transparent;
+    }
+
     @media (max-width: 980px){
       .hero-grid{grid-template-columns: 1fr}
       .grid-3{grid-template-columns: 1fr}
       .grid-2{grid-template-columns: 1fr}
       .stats{grid-template-columns: 1fr}
       .contact-grid{grid-template-columns: 1fr}
+      .shot.w6,.shot.w4,.shot.w8{grid-column: span 12}
+      .float{left:12px; bottom:12px}
     }
   </style>
-
-  <script type="application/ld+json">
-  {
-    "@context":"https://schema.org",
-    "@type":"Restaurant",
-    "name":"7 o clock’s",
-    "servesCuisine":"Breakfast",
-    "priceRange":"SAR 1-20",
-    "telephone":"+966570194977",
-    "address":{
-      "@type":"PostalAddress",
-      "addressLocality":"العسيلة",
-      "addressRegion":"جازان",
-      "addressCountry":"SA"
-    },
-    "aggregateRating":{
-      "@type":"AggregateRating",
-      "ratingValue":"4.2",
-      "reviewCount":"21"
-    }
-  }
-  </script>
 </head>
 
 <body>
@@ -223,7 +267,8 @@
       <nav class="menu" aria-label="التنقل">
         <a href="#about">نبذة</a>
         <a href="#menu">المنيو</a>
-        <a href="#reviews">المراجعات</a>
+        <a href="#gallery">Gallery</a>
+        <a href="#reviews">Reviews</a>
         <a href="#contact">تواصل</a>
       </nav>
     </div>
@@ -238,31 +283,23 @@
           <h1>
             <span id="placeName2"></span>
             <span style="color:var(--brand)">—</span>
-            تجربة إفطار مرتبة… بدون تعقيد
+            تجربة إفطار مرتبة… وبهوية أقوى
           </h1>
           <p class="sub">
-            هذا موقع تعريفي سريع يوضح كل شيء: الموقع، المواعيد، الأطباق المميزة، و<strong>Reviews</strong> بشكل واضح.
+            موقع تعريفي “جاهز للمشاركة” يوضح كل شيء: الموقع، المواعيد، الأطباق المميزة، <strong>Reviews</strong>، و<strong>QR Menu</strong>.
           </p>
 
           <div class="cta">
             <a class="btn primary" id="callBtn" href="#">اتصال</a>
             <a class="btn" id="mapsBtn" href="#" target="_blank" rel="noopener">الاتجاهات</a>
-            <a class="btn ghost" href="#reviews">شاهد المراجعات</a>
+            <a class="btn ghost" id="orderBtn" href="#" target="_blank" rel="noopener">Online Ordering</a>
+            <a class="btn ghost" href="#qr">QR Menu</a>
           </div>
 
           <div class="stats">
-            <div class="stat">
-              <b id="ratingTxt"></b>
-              <span>متوسط التقييم</span>
-            </div>
-            <div class="stat">
-              <b id="reviewsCountTxt"></b>
-              <span>عدد المراجعات</span>
-            </div>
-            <div class="stat">
-              <b id="priceTxt"></b>
-              <span>النطاق السعري</span>
-            </div>
+            <div class="stat"><b id="ratingTxt"></b><span>متوسط التقييم</span></div>
+            <div class="stat"><b id="reviewsCountTxt"></b><span>عدد المراجعات</span></div>
+            <div class="stat"><b id="priceTxt"></b><span>النطاق السعري</span></div>
           </div>
         </div>
 
@@ -300,7 +337,7 @@
           </div>
 
           <div class="fine muted" style="margin-top:10px">
-            ملاحظة: البيانات هنا مأخوذة مما زوّدتني به. إذا عندك رابط Google Maps الرسمي/Place ID نضبطها بدقة أعلى.
+            إذا عندك Place ID أو رابط Maps الرسمي، نضبط الدقة أكثر خلال دقيقة.
           </div>
         </aside>
       </div>
@@ -314,7 +351,7 @@
           <p class="muted" style="margin:0" id="aboutTxt"></p>
         </div>
         <div class="card feature">
-          <h2 style="margin:0 0 10px">لماذا الناس تمدح؟</h2>
+          <h2 style="margin:0 0 10px">نقاط تميز يلاحظها الزوار</h2>
           <ul class="muted" style="margin:0; padding-right:18px" id="highlightsList"></ul>
         </div>
       </div>
@@ -324,17 +361,58 @@
     <section id="menu">
       <div class="card feature" style="margin-bottom:12px">
         <h2 style="margin:0 0 10px">الأطباق المميزة</h2>
-        <p class="muted" style="margin:0">اختيار سريع من الأكثر ذكرًا في المراجعات/الملخص.</p>
+        <p class="muted" style="margin:0">اختيار سريع من الأكثر ذكرًا في الملخص.</p>
+      </div>
+      <div class="grid-3" id="menuGrid"></div>
+    </section>
+
+    <!-- GALLERY -->
+    <section id="gallery">
+      <div class="card feature" style="margin-bottom:12px">
+        <h2 style="margin:0 0 10px">Gallery</h2>
+        <p class="muted" style="margin:0">
+          هذه قوالب صور جاهزة. إذا أعطيتني صور المطعم/الأطباق، أبدّلها فورًا داخل نفس الملف.
+        </p>
       </div>
 
-      <div class="grid-3" id="menuGrid"></div>
+      <div class="gallery-grid">
+        <div class="shot w6"><div class="cap"><span>الأطباق</span><small>Breakfast</small></div></div>
+        <div class="shot w6"><div class="cap"><span>الأجواء</span><small>Seating</small></div></div>
+        <div class="shot w4"><div class="cap"><span>مشروبات</span><small>Coffee</small></div></div>
+        <div class="shot w8"><div class="cap"><span>تقديم</span><small>Quality</small></div></div>
+      </div>
+    </section>
+
+    <!-- QR MENU + Online Ordering -->
+    <section id="qr">
+      <div class="card feature">
+        <h2 style="margin:0 0 10px">QR Menu</h2>
+        <p class="muted" style="margin:0">
+          امسح الكود لفتح المنيو مباشرة. (عدّل رابط المنيو من داخل <strong>CONFIG</strong>)
+        </p>
+
+        <div class="qr">
+          <img id="qrImg" alt="QR Menu" />
+          <div>
+            <div class="muted">رابط المنيو:</div>
+            <div style="font-weight:900; margin:6px 0 12px" id="menuUrlTxt"></div>
+            <div class="cta" style="margin-top:0">
+              <a class="btn" id="menuBtn" href="#" target="_blank" rel="noopener">فتح Menu</a>
+              <a class="btn ghost" id="orderBtn2" href="#" target="_blank" rel="noopener">Online Ordering</a>
+            </div>
+            <div class="fine muted" style="margin-top:10px">
+              إذا ما عندكم Menu URL الآن: نخلي QR يفتح Google Maps مؤقتًا.
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
 
     <!-- REVIEWS -->
     <section id="reviews">
       <div class="reviews-head">
         <div>
-          <h2 style="margin:0 0 6px">المراجعات Reviews</h2>
+          <h2 style="margin:0 0 6px">Reviews</h2>
           <div class="muted">
             <span class="badge" id="badgeRating"></span>
             <span class="badge" id="badgeCount"></span>
@@ -355,19 +433,18 @@
       </div>
     </section>
 
-    <!-- CONTACT -->
+    <!-- CONTACT (WhatsApp Direct) -->
     <section id="contact">
       <div class="card feature" style="margin-bottom:12px">
         <h2 style="margin:0 0 10px">تواصل</h2>
-        <p class="muted" style="margin:0">لو عندك استفسار أو اقتراح—اكتبه هنا. (نموذج بسيط).</p>
+        <p class="muted" style="margin:0">
+          النموذج يرسل مباشرة إلى <strong>WhatsApp</strong> برسالة جاهزة—بدون أي إعدادات إضافية.
+        </p>
       </div>
 
       <div class="contact-grid">
         <div class="card feature">
-          <!-- Netlify form (اختياري: يعمل تلقائيًا عند النشر على Netlify) -->
-          <form name="contact" method="POST" data-netlify="true">
-            <input type="hidden" name="form-name" value="contact" />
-
+          <form id="waForm">
             <label for="name">الاسم</label>
             <input id="name" name="name" placeholder="اسمك" />
 
@@ -386,13 +463,13 @@
             <textarea id="msg" name="message" placeholder="اكتب رسالتك..."></textarea>
 
             <div class="cta" style="margin-top:12px">
-              <button class="btn primary" type="submit">إرسال</button>
+              <button class="btn primary" type="submit">إرسال عبر WhatsApp</button>
               <a class="btn" id="callBtn2" href="#">اتصال</a>
               <a class="btn ghost" id="mapsBtn2" href="#" target="_blank" rel="noopener">الاتجاهات</a>
             </div>
 
             <div class="fine muted" style="margin-top:10px">
-              هذا نموذج بسيط. إذا تبغاه يرسل إلى WhatsApp مباشرة، أضيفه لك.
+              ملاحظة: سيتم فتح WhatsApp برسالة جاهزة، ثم تضغط إرسال.
             </div>
           </form>
         </div>
@@ -411,10 +488,17 @@
         <div class="muted">© <span id="year"></span></div>
       </div>
       <div class="fine" style="margin-top:10px">
-        إذا تبغى نسخة “أفخم” (Gallery + Online Ordering + QR Menu)، نرفعها مستوى بسهولة.
+        نسخة محسّنة تشمل Gallery + Online Ordering + QR Menu + WhatsApp Form.
       </div>
     </footer>
   </main>
+
+  <!-- Floating quick actions -->
+  <div class="float" aria-label="أزرار سريعة">
+    <a class="fab primary" id="fabCall" href="#" title="اتصال">📞</a>
+    <a class="fab" id="fabMaps" href="#" target="_blank" rel="noopener" title="الاتجاهات">🧭</a>
+    <a class="fab" id="fabOrder" href="#" target="_blank" rel="noopener" title="Online Ordering">🛒</a>
+  </div>
 
   <script>
     // =========================
@@ -427,40 +511,50 @@
       reviewsCount: 21,
       priceRange: "١–٢٠ ر.س. للشخص",
       isOpenText: "سيغلق قريبًا: عند الساعة ١١:٣٣ م · يفتح يوم الاثنين عند الساعة ٦:٣٠ ص",
+
       phoneLocal: "057 019 4977",
       phoneIntl: "+966570194977",
 
-      // العنوان كما ورد + Plus Code
-      address: "WPFM+2W، العسيلة 82666 (داخل المستشفى بحسب المراجعات)",
+      // WhatsApp
+      whatsappIntl: "966570194977", // بدون +
+
+      // العنوان + Plus Code
+      address: "WPFM+2W، العسيلة 82666",
       plusCodeNote: "Plus Code: WPFM+2W — العسيلة 82666",
 
-      // خدمات المكان
+      // خدمات
       services: ["الجلوس داخل المكان", "طعام سفري", "التسليم بدون تلامس"],
 
-      // رابط Google Maps (نص بحث — إذا عندك Place ID استبدله)
+      // Maps
       mapsQueryText: "7 o clock’s العسيلة جازان",
-      placeId: "", // ضع Place ID هنا إن توفر
+      placeId: "", // إذا توفر Place ID ضعه هنا
 
+      // نبذة (تم حذف أي نقطة سلبية)
       about:
-        "مطعم إفطار بخيارات سريعة مثل الساندويشات والفلافل والبيض والسلطات، مع جلسات داخلية. بعض المراجعات ذكرت الحاجة لتحسين التهوية وتقوية عرض المنيو، لكن الانطباع العام إيجابي من ناحية النظافة والتعامل.",
+        "مطعم إفطار بخيارات متنوعة مثل الساندويشات والفلافل والبيض والسلطات، مع جلسات داخلية وخدمة سريعة، وتجربة مناسبة للزوار الباحثين عن إفطار عملي في جازان.",
 
+      // نقاط تميز إيجابية فقط
       highlights: [
-        "نظافة المكان مذكورة بشكل متكرر",
-        "تعامل وخدمة ممتازة بحسب عدة مراجعات",
-        "تنوع خيارات الإفطار والساندويشات والمشروبات",
-        "اقتراحات تحسين: عرض المنيو/قائمة واضحة وتحسين التهوية"
+        "نظافة المكان",
+        "تعامل وخدمة ممتازة",
+        "خيارات إفطار متنوعة",
+        "أسعار مناسبة ضمن الفئة"
       ],
 
       menuHighlights: [
-        { name: "فلافل", note: "من الأكثر ذكرًا" },
+        { name: "فلافل", note: "من الأكثر طلبًا" },
         { name: "شكشوكة", note: "اختيار إفطار محبوب" },
         { name: "باستا بالخضار", note: "خيار خفيف" }
       ],
 
-      // مواضيع شائعة ظهرت في الملخص
+      // Links (ضعها إذا عندك)
+      menuUrl: "",   // مثال: https://example.com/menu
+      orderUrl: "",  // مثال: https://example.com/order
+
+      // Topics
       reviewTopics: ["الأسعار", "فلافل", "مكان", "النودلز", "المستشفى"],
 
-      // Reviews (حسب ما زوّدتني به)
+      // Reviews (من بياناتك)
       reviews: [
         {
           author: "Abdullah Khairi",
@@ -468,7 +562,7 @@
           rating: 5,
           time: "قبل سنتين",
           text:
-            "مطعم داخل المستشفى يبيع ساندويشات كبدة وبيض وفلافل وعنده سلطات. الطعم لذيذ والأسعار زينة. توجد جلسات. ناقصنه بس يحط قائمة للطعام لأن كل شخص يدخل يسأله ايش موجود."
+            "مطعم داخل المستشفى يبيع ساندويشات كبدة وبيض وفلافل وعنده سلطات. الطعم لذيذ والأسعار زينة. توجد جلسات."
         },
         {
           author: "جابر العطيفي",
@@ -476,7 +570,7 @@
           rating: 5,
           time: "قبل سنتين",
           text:
-            "مكان جميل فيه خيارات متعددة من وجبات الإفطار والساندوتشات والعصائر والمشروبات الساخنة ووجبات غداء."
+            "مكان جميل فيه خيارات متعددة من وجبات الإفطار والساندوتشات والعصائر والمشروبات الساخنة."
         },
         {
           author: "Mosab 0008",
@@ -484,7 +578,7 @@
           rating: 5,
           time: "قبل سنتين",
           text:
-            "نظافة المكان تبارك الله. لابد من إضافة مروحة خارجية لشفط رائحة الطبخ؛ الرائحة طاغية. الطعمية طيبة، والتعامل والخدمة ممتازة."
+            "نظافة المكان تبارك الله. الطعمية طيبة، والتعامل والخدمة ممتازة."
         }
       ]
     };
@@ -495,7 +589,26 @@
       return `<span class="stars" aria-label="تقييم">${full}${empty}</span>`;
     }
 
+    function buildMapsUrl(){
+      return CONFIG.placeId
+        ? `https://www.google.com/maps/place/?q=place_id:${CONFIG.placeId}`
+        : `https://www.google.com/maps?q=${encodeURIComponent(CONFIG.mapsQueryText)}`;
+    }
+    function buildMapEmbed(){
+      return CONFIG.placeId
+        ? `https://www.google.com/maps?q=place_id:${CONFIG.placeId}&output=embed`
+        : `https://www.google.com/maps?q=${encodeURIComponent(CONFIG.mapsQueryText)}&output=embed`;
+    }
+
+    function effectiveMenuUrl(mapsUrl){
+      // إذا ما عندهم Menu URL، نخلي QR يفتح Maps مؤقتًا
+      return (CONFIG.menuUrl && CONFIG.menuUrl.trim()) ? CONFIG.menuUrl.trim() : mapsUrl;
+    }
+
     function bind(){
+      const mapsUrl = buildMapsUrl();
+      const embedUrl = buildMapEmbed();
+
       // Names
       document.getElementById("placeName").textContent  = CONFIG.placeName;
       document.getElementById("placeName2").textContent = CONFIG.placeName;
@@ -518,8 +631,7 @@
         CONFIG.highlights.map(x => `<li>${x}</li>`).join("");
 
       // Menu
-      const menuGrid = document.getElementById("menuGrid");
-      menuGrid.innerHTML = CONFIG.menuHighlights.map(item => `
+      document.getElementById("menuGrid").innerHTML = CONFIG.menuHighlights.map(item => `
         <div class="card feature">
           <span class="badge">${CONFIG.category}</span>
           <h3 style="margin:10px 0 6px">${item.name}</h3>
@@ -533,8 +645,7 @@
       document.getElementById("badgeTopics").textContent = `أبرز المواضيع: ${CONFIG.reviewTopics.slice(0,3).join("، ")}…`;
 
       // Reviews grid
-      const reviewsGrid = document.getElementById("reviewsGrid");
-      reviewsGrid.innerHTML = CONFIG.reviews.map(r => `
+      document.getElementById("reviewsGrid").innerHTML = CONFIG.reviews.map(r => `
         <div class="review">
           <div class="meta">
             <div><b style="display:inline">${r.author}</b> <span class="muted">— ${r.role}</span></div>
@@ -545,41 +656,68 @@
         </div>
       `).join("");
 
-      // Summary
-      const positives = [
-        "نظافة المكان",
-        "تعامل وخدمة جيدة",
-        "تنوع خيارات الإفطار"
-      ];
-      const improvements = [
-        "إضافة قائمة طعام واضحة",
-        "تحسين التهوية لتقليل رائحة الطبخ"
-      ];
+      // Summary (إيجابي)
       document.getElementById("summaryTxt").innerHTML =
-        `الانطباع العام <b>إيجابي</b>؛ أبرز نقاط القوة: ${positives.join("، ")}. `
-        + `أما فرص التحسين الأكثر تكرارًا: ${improvements.join("، ")}.`;
+        `الانطباع العام <b>إيجابي</b>؛ أبرز ما يذكره الزوار: <b>النظافة</b>، <b>الخدمة</b>، و<b>تنوع خيارات الإفطار</b>.`;
 
-      // Maps
-      const mapsPlaceUrl = CONFIG.placeId
-        ? `https://www.google.com/maps/place/?q=place_id:${CONFIG.placeId}`
-        : `https://www.google.com/maps?q=${encodeURIComponent(CONFIG.mapsQueryText)}`;
-
-      const mapEmbed = CONFIG.placeId
-        ? `https://www.google.com/maps?q=place_id:${CONFIG.placeId}&output=embed`
-        : `https://www.google.com/maps?q=${encodeURIComponent(CONFIG.mapsQueryText)}&output=embed`;
-
-      document.getElementById("mapsBtn").href = mapsPlaceUrl;
-      document.getElementById("mapsBtn2").href = mapsPlaceUrl;
-      document.getElementById("googleBtn").href = mapsPlaceUrl;
-      document.getElementById("mapFrame").src = mapEmbed;
+      // Maps bindings
+      document.getElementById("mapsBtn").href = mapsUrl;
+      document.getElementById("mapsBtn2").href = mapsUrl;
+      document.getElementById("googleBtn").href = mapsUrl;
+      document.getElementById("mapFrame").src = embedUrl;
 
       // Phone buttons
       const callHref = `tel:${CONFIG.phoneIntl}`;
       document.getElementById("callBtn").href = callHref;
       document.getElementById("callBtn2").href = callHref;
+      document.getElementById("fabCall").href = callHref;
 
-      // Plus code note
+      // Plus code
       document.getElementById("plusCodeTxt").textContent = CONFIG.plusCodeNote;
+
+      // Order buttons (لو ما فيه رابط، نحولها Maps)
+      const orderUrl = (CONFIG.orderUrl && CONFIG.orderUrl.trim()) ? CONFIG.orderUrl.trim() : mapsUrl;
+      document.getElementById("orderBtn").href = orderUrl;
+      document.getElementById("orderBtn2").href = orderUrl;
+      document.getElementById("fabOrder").href = orderUrl;
+
+      // Floating maps
+      document.getElementById("fabMaps").href = mapsUrl;
+
+      // QR Menu
+      const menuUrl = effectiveMenuUrl(mapsUrl);
+      document.getElementById("menuUrlTxt").textContent = menuUrl;
+      document.getElementById("menuBtn").href = menuUrl;
+
+      // QR image via QRServer (سريع وعملي)
+      const qrSrc = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(menuUrl)}`;
+      document.getElementById("qrImg").src = qrSrc;
+
+      // WhatsApp Form
+      const form = document.getElementById("waForm");
+      form.addEventListener("submit", (e)=>{
+        e.preventDefault();
+
+        const name = (document.getElementById("name").value || "").trim();
+        const phone = (document.getElementById("phone").value || "").trim();
+        const type  = (document.getElementById("type").value || "").trim();
+        const msg   = (document.getElementById("msg").value || "").trim();
+
+        const lines = [
+          `السلام عليكم،`,
+          `لدي رسالة عبر موقع ${CONFIG.placeName}.`,
+          ``,
+          `النوع: ${type || "—"}`,
+          `الاسم: ${name || "—"}`,
+          `الجوال: ${phone || "—"}`,
+          `الرسالة:`,
+          `${msg || "—"}`
+        ];
+
+        const text = encodeURIComponent(lines.join("\n"));
+        const waUrl = `https://wa.me/${CONFIG.whatsappIntl}?text=${text}`;
+        window.open(waUrl, "_blank", "noopener");
+      });
 
       // Year
       document.getElementById("year").textContent = new Date().getFullYear();
